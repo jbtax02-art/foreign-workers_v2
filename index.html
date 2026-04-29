@@ -482,22 +482,26 @@ canvas#sigPad{display:block;width:100%;height:130px;touch-action:none}
 
 
     <!-- 날짜 & 서명란 -->
-    <div id="cpb-date" style="text-align:center;font-size:13px;font-weight:600;margin-bottom:24px"></div>
-    <!-- 갑 서명 -->
-    <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:24px">
-      <div style="font-size:13px;font-weight:600">갑 :</div>
-      <div id="cpb-signame" style="font-size:13px;font-weight:700;min-width:60px;text-align:center"></div>
-      <div style="position:relative;width:110px;height:60px;border:1px solid #999;display:flex;align-items:center;justify-content:center">
-        <span style="font-size:10px;color:#bbb;position:absolute">(서명 또는 인)</span>
-        <div id="cpb-sig" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1"></div>
+    <div id="cpb-date" style="text-align:center;font-size:13px;font-weight:600;margin:20px 0 28px"></div>
+    <!-- 갑/을 서명 통일 레이아웃 -->
+    <div style="display:flex;flex-direction:column;gap:16px;align-items:flex-end;padding-right:20px">
+      <!-- 갑 -->
+      <div style="display:flex;align-items:center;gap:12px;width:320px">
+        <div style="font-size:13px;font-weight:700;width:24px;text-align:right;flex-shrink:0">갑 :</div>
+        <div id="cpb-signame" style="font-size:13px;font-weight:700;width:80px;text-align:center"></div>
+        <div style="position:relative;width:120px;height:64px;border:1px solid #999;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <span style="font-size:10px;color:#bbb;position:absolute">(서명 또는 인)</span>
+          <div id="cpb-sig" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1"></div>
+        </div>
       </div>
-    </div>
-    <!-- 을 서명 -->
-    <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:8px">
-      <div style="font-size:13px;font-weight:600">을 :</div>
-      <div style="text-align:center;min-width:60px">
-        <div style="font-size:12px;font-weight:700">세무회계 아진</div>
-        <div style="font-size:11px;color:#555">대표세무사 김종빈 (인)</div>
+      <!-- 을 -->
+      <div style="display:flex;align-items:center;gap:12px;width:320px">
+        <div style="font-size:13px;font-weight:700;width:24px;text-align:right;flex-shrink:0">을 :</div>
+        <div style="width:80px;text-align:center;font-size:12px;font-weight:700">세무회계 아진</div>
+        <div style="width:120px;height:64px;border:1px solid #999;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+          <div style="font-size:11px;font-weight:700">김 종 빈</div>
+          <div style="font-size:10px;color:#555">(인)</div>
+        </div>
       </div>
     </div>
 
