@@ -442,6 +442,77 @@ canvas#sigPad{display:block;width:100%;height:130px;touch-action:none}
   <div class="bspace"></div>
 </div>
 
+<!-- 숨김: 계약서 PDF 캡처용 -->
+<div id="contractPdfBox" style="display:none;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;padding:0">
+  <!-- 헤더 -->
+  <div style="background:#0B1F3A;padding:16px 28px;text-align:center">
+    <div style="color:#F5A623;font-size:16px;font-weight:900;letter-spacing:3px">용 역 계 약 서</div>
+    <div id="cpb-subtitle" style="color:rgba(255,255,255,0.7);font-size:10px;margin-top:4px">경정청구 세무대리 용역계약</div>
+  </div>
+  <div style="padding:24px 28px">
+    <!-- 당사자 표 -->
+    <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px">
+      <tr>
+        <td rowspan="3" style="border:1px solid #999;text-align:center;font-weight:700;width:50px;background:#f5f5f5;vertical-align:middle;font-size:13px">갑<br>(의뢰인)</td>
+        <td style="border:1px solid #999;padding:6px 10px;background:#fafafa;font-weight:600;width:80px">성&nbsp;&nbsp;&nbsp;명</td>
+        <td id="cpb-name" style="border:1px solid #999;padding:6px 10px;font-weight:700;font-size:13px"></td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #999;padding:6px 10px;background:#fafafa;font-weight:600">등록번호</td>
+        <td id="cpb-arc" style="border:1px solid #999;padding:6px 10px;font-weight:700;letter-spacing:1px"></td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #999;padding:6px 10px;background:#fafafa;font-weight:600">국&nbsp;&nbsp;&nbsp;가</td>
+        <td id="cpb-country" style="border:1px solid #999;padding:6px 10px;font-weight:700"></td>
+      </tr>
+      <tr>
+        <td rowspan="2" style="border:1px solid #999;text-align:center;font-weight:700;background:#f5f5f5;vertical-align:middle;font-size:13px">을<br>(수임인)</td>
+        <td style="border:1px solid #999;padding:6px 10px;background:#fafafa;font-weight:600">상&nbsp;&nbsp;&nbsp;호</td>
+        <td style="border:1px solid #999;padding:6px 10px;font-weight:700">세무회계 아진</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #999;padding:6px 10px;background:#fafafa;font-weight:600">대표세무사</td>
+        <td style="border:1px solid #999;padding:6px 10px">김 종 빈</td>
+      </tr>
+    </table>
+
+    <!-- 조항들 -->
+    <div id="cpb-articles" style="font-size:12px;color:#333;line-height:1.8;margin-bottom:16px"></div>
+
+    <!-- 수수료 강조 -->
+    <div style="border:1px solid #F5A623;padding:10px 14px;background:#FFF8E8;margin-bottom:16px;font-size:12px">
+      <strong>제3조 (용역보수)</strong>&nbsp;&nbsp;
+      실제 환급세액의 <strong style="color:#B8770A">20%</strong>
+      <span style="color:#999;font-size:11px;margin-left:8px">(환급 없을 시 수수료 없음)</span>
+    </div>
+    <div id="cpb-fee-lang" style="border:1px solid #e0d0a0;padding:8px 14px;background:#FFFDF0;margin-bottom:16px;font-size:11px;color:#555"></div>
+
+    <!-- 날짜 & 서명란 -->
+    <div id="cpb-date" style="text-align:center;font-size:13px;font-weight:600;margin-bottom:16px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px">
+      <div style="font-size:12px;color:#555">을: 세무회계 아진 · 대표세무사 김종빈 (인)</div>
+      <div style="text-align:center">
+        <div style="font-size:11px;color:#666;margin-bottom:4px">갑 (서명 또는 인)</div>
+        <div style="position:relative;width:100px;height:60px;border:1px solid #999;display:flex;align-items:center;justify-content:center">
+          <span style="font-size:10px;color:#bbb;position:absolute">(서명란)</span>
+          <div id="cpb-sig" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1"></div>
+        </div>
+        <div id="cpb-signame" style="font-size:11px;color:#444;margin-top:2px;border-top:1px solid #ccc;padding-top:1px;min-width:100px;text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- 번역본 구분선 -->
+    <div style="border-top:2px solid #0B1F3A;margin-bottom:16px"></div>
+    <div id="cpb-lang-section" style="font-size:11px;color:#444;line-height:1.8"></div>
+
+    <!-- 외국인등록증 -->
+    <div id="cpb-rc-section" style="margin-top:16px;border-top:1px solid #ddd;padding-top:12px">
+      <div style="font-size:12px;font-weight:700;color:#0B1F3A;margin-bottom:8px">Residence Card (외국인등록증)</div>
+      <div id="cpb-rc" style="border:1px solid #ccc;border-radius:4px;overflow:hidden;text-align:center"></div>
+    </div>
+  </div>
+</div>
+
 <!-- 숨김: 정보시트 캡처용 -->
 <div id="infoBox" style="display:none;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;padding:0">
   <div style="background:#0B1F3A;padding:14px 28px;text-align:center">
@@ -1132,29 +1203,57 @@ async function doSubmit(){
     // ── PDF 공통 선언 ──
     const { jsPDF } = window.jspdf;
 
-    // ── 계약서 PDF (오프스크린 캡처 - infoBox 방식) ──
-    const contractBox = document.getElementById('contractKr');
-    const contractBoxOrig = contractBox.getAttribute('style') || '';
-    contractBox.style.cssText = 'display:block !important; position:fixed; left:-9999px; top:0; width:794px; max-height:none; overflow:visible; background:#ffffff;';
+    // ── 계약서 PDF (contractPdfBox - infoBox와 동일 방식) ──
+    const c = CONTRACT[S.lang] || CONTRACT['en'];
+    const cpb = (id) => document.getElementById(id);
+    cpb('cpb-name').textContent    = rawName;
+    cpb('cpb-arc').textContent     = v('arcnum');
+    cpb('cpb-country').textContent = S.country;
+    cpb('cpb-date').textContent    = `${today.getFullYear()}년   ${today.getMonth()+1}월   ${today.getDate()}일`;
+    cpb('cpb-subtitle').textContent = c.title || 'SERVICE AGREEMENT';
+    // 조항 (한국어)
+    cpb('cpb-articles').innerHTML = `
+      <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제1조 (계약의 목적)</strong><br>
+      갑은 2020년부터 2024년까지 기 신고된 종합소득세 경정청구에 관한 용역을 을에게 위임합니다.</div>
+      <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제2조 (용역의 범위)</strong><br>
+      을은 갑의 2020~2024년 종합소득세에 관하여 소득공제 및 세액공제를 경정청구하여 납부한 세금을 환급받는 용역을 제공합니다.</div>
+      <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제4조 (계약의 종료)</strong><br>
+      본 계약은 제2조의 용역이 완료되는 날까지 유효합니다. 당사자 합의 또는 의무 위반 시 서면 통보 후 해지할 수 있습니다.</div>
+      <div><strong style="color:#0B1F3A">제5조 (비밀유지)</strong><br>
+      을은 갑으로부터 제공받은 모든 정보를 용역 수행 목적 이외에 사용하거나 제3자에게 공개하지 않습니다. 본 의무는 계약 종료 후 1년간 유지됩니다.</div>
+    `;
+    // 수수료 번역
+    cpb('cpb-fee-lang').innerHTML = `<strong>${c.c3t}</strong>&nbsp;&nbsp;${c.c3.replace(/<[^>]+>/g,'')}`;
+    // 번역 섹션
+    cpb('cpb-lang-section').innerHTML = `
+      <div style="font-weight:700;text-align:center;font-size:12px;color:#0B1F3A;margin-bottom:8px">${c.title}</div>
+      <div style="margin-bottom:6px"><strong>${c.c1t}</strong><br>${c.c1}</div>
+      <div style="margin-bottom:6px"><strong>${c.c2t}</strong><br>${c.c2}</div>
+      <div style="margin-bottom:6px"><strong>${c.c4t}</strong><br>${c.c4}</div>
+      <div><strong>${c.c5t}</strong><br>${c.c5}</div>
+    `;
+    // 서명
+    const cpbSig = document.getElementById('cpb-sig');
+    if(cpbSig){ const si=document.createElement('img'); si.src=sigData; si.style.cssText='max-height:56px;max-width:96px;object-fit:contain;'; cpbSig.innerHTML=''; cpbSig.appendChild(si); }
+    cpb('cpb-signame').textContent = rawName;
+    // 외국인등록증
+    const cpbRc = document.getElementById('cpb-rc');
+    if(cpbRc && S.uploads.rc){ const ri=document.createElement('img'); ri.src=S.uploads.rc; ri.style.cssText='max-width:100%;max-height:180px;object-fit:contain;display:block;margin:0 auto;'; cpbRc.innerHTML=''; cpbRc.appendChild(ri); }
+    else if(cpbRc){ cpbRc.style.display='none'; }
+
+    const contractPdfBox = document.getElementById('contractPdfBox');
+    contractPdfBox.style.display = 'block';
     await new Promise(r => setTimeout(r, 200));
-    const contractCanvas = await html2canvas(contractBox, {
+    const contractCanvas = await html2canvas(contractPdfBox, {
       scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', logging:false, width:794
     });
-    contractBox.setAttribute('style', contractBoxOrig);
+    contractPdfBox.style.display = 'none';
 
     const contractPdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const CW=210, CM=12;
-    contractPdf.setFillColor(11,31,58); contractPdf.rect(0,0,CW,20,'F');
-    contractPdf.setTextColor(245,166,35); contractPdf.setFont('helvetica','bold'); contractPdf.setFontSize(13);
-    contractPdf.text('경정청구 용역계약서', CW/2, 10, {align:'center'});
-    contractPdf.setTextColor(255,255,255); contractPdf.setFontSize(8);
-    contractPdf.text(`세무회계 아진  |  ${rawName}  |  ${v('arcnum')}`, CW/2, 17, {align:'center'});
+    const CW=210, CM=10;
     const cW2 = CW-CM*2;
-    const cRatio = contractCanvas.height / contractCanvas.width;
-    const cH2 = Math.min(cW2 * cRatio, 277-20-CM);
-    if(cW2 > 0 && cH2 > 0){
-      safeAddImage(contractPdf, contractCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', CM, 22, cW2, cH2);
-    }
+    const cH2 = Math.min(cW2*(contractCanvas.height/contractCanvas.width), 277);
+    safeAddImage(contractPdf, contractCanvas.toDataURL('image/jpeg',0.95), 'JPEG', CM, CM, cW2, cH2);
     const cBlob = contractPdf.output('blob');
     formData.append('attachment3', new File([cBlob], `${dateCode}_${arcNum}_CONTRACT.pdf`, {type:'application/pdf'}));
 
