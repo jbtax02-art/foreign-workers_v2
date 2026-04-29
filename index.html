@@ -1324,20 +1324,27 @@ async function doSubmit(){
     // 헤더 없이 위임장만 A4에 꽉 채우기 (서명은 poaBox HTML에 이미 포함됨)
     safeAddImage(pdf, poaImg, 'JPEG', M, M, poaW, finalH);
 
-    // 외국인등록증 → 항상 2페이지에 추가
+    // 외국인등록증 → 같은 페이지 여백에 맞춰 삽입
     if(S.uploads.rc){
-      pdf.addPage();
-      pdf.setFillColor(11,31,58); pdf.rect(0,0,W,18,'F');
-      pdf.setTextColor(245,166,35); pdf.setFont('helvetica','bold'); pdf.setFontSize(12);
-      pdf.text('Residence Card (외국인등록증)', W/2, 12, {align:'center'});
-      const rcImg=new Image(); rcImg.src=S.uploads.rc;
-      await new Promise(r=>{rcImg.onload=r; rcImg.onerror=r;});
-      const iw=rcImg.naturalWidth||1, ih=rcImg.naturalHeight||1;
-      const maxW=W-M*2; let dw=maxW, dh=dw*(ih/iw);
-      if(dh>H-30){ dh=H-30; dw=dh*(iw/ih); }
-      safeAddImage(pdf, S.uploads.rc,'JPEG',(W-dw)/2, 24, dw, dh);
-      pdf.setTextColor(132,146,166); pdf.setFont('helvetica','normal'); pdf.setFontSize(8);
-      pdf.text(`${v('name')}  |  ${v('arcnum')}  |  ${S.country}`, W/2, 24+dh+8, {align:'center'});
+      const rcY = M + finalH + 6;
+      const availH = H - rcY - M - 10;
+      if(availH > 20){
+        // 헤더 라벨
+        pdf.setFillColor(11,31,58);
+        pdf.rect(M, rcY, W-M*2, 8, 'F');
+        pdf.setTextColor(245,166,35);
+        pdf.setFont('helvetica','bold');
+        pdf.setFontSize(8);
+        pdf.text('Residence Card', W/2, rcY+5.5, {align:'center'});
+
+        const rcImg=new Image(); rcImg.src=S.uploads.rc;
+        await new Promise(r=>{rcImg.onload=r; rcImg.onerror=r;});
+        const iw=rcImg.naturalWidth||1, ih=rcImg.naturalHeight||1;
+        const maxW=W-M*2;
+        let dw=maxW, dh=dw*(ih/iw);
+        if(dh > availH-8){ dh=availH-8; dw=dh*(iw/ih); }
+        safeAddImage(pdf, S.uploads.rc,'JPEG',(W-dw)/2, rcY+9, dw, dh);
+      }
     }
 
     formData.append('attachment', new File([pdf.output('blob')], `${dateCode}_${arcNum}_POA.pdf`, {type:'application/pdf'}));
