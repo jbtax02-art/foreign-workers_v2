@@ -194,8 +194,7 @@ canvas#sigPad{display:block;width:100%;height:130px;touch-action:none}
 
       <!-- 탭: 한국어 / 번역본 -->
       <div style="display:flex;gap:6px;margin-bottom:10px">
-        <button onclick="showContractTab('kr')" id="tabKr" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--navy);background:var(--navy);color:white;font-size:11px;font-weight:700;cursor:pointer">🇰🇷 한국어</button>
-        <button onclick="showContractTab('lang')" id="tabLang" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--navy);font-size:11px;font-weight:700;cursor:pointer"><span id="tabLangFlag">🌏</span> 번역본</button>
+        <button onclick="showContractTab('kr')" id="tabKr" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--navy);background:var(--navy);color:white;font-size:11px;font-weight:700;cursor:pointer">🇰🇷 한국어</button>        <button onclick="showContractTab('lang')" id="tabLang" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--navy);font-size:11px;font-weight:700;cursor:pointer"><span id="tabLangFlag">🌏</span> 번역본</button>
       </div>
 
       <!-- 한국어 계약서 -->
@@ -517,12 +516,12 @@ function showContractTab(tab){
   const tKr=document.getElementById('tabKr'), tLang=document.getElementById('tabLang');
   if(tab==='kr'){
     kr.style.display='block'; lang.style.display='none';
-    tKr.style.cssText+='background:var(--navy);color:white;border-color:var(--navy)';
-    tLang.style.cssText='flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--navy);font-size:11px;font-weight:700;cursor:pointer';
+    tKr.style.background='var(--navy)'; tKr.style.color='white'; tKr.style.borderColor='var(--navy)';
+    tLang.style.background='white'; tLang.style.color='var(--navy)'; tLang.style.borderColor='var(--border)';
   } else {
     kr.style.display='none'; lang.style.display='block';
-    tLang.style.cssText+='background:var(--navy);color:white;border-color:var(--navy)';
-    tKr.style.cssText='flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--navy);font-size:11px;font-weight:700;cursor:pointer';
+    tLang.style.background='var(--navy)'; tLang.style.color='white'; tLang.style.borderColor='var(--navy)';
+    tKr.style.background='white'; tKr.style.color='var(--navy)'; tKr.style.borderColor='var(--border)';
   }
 }
 
