@@ -479,25 +479,25 @@ canvas#sigPad{display:block;width:100%;height:130px;touch-action:none}
     <!-- 조항들 -->
     <div id="cpb-articles" style="font-size:12px;color:#333;line-height:1.8;margin-bottom:16px"></div>
 
-    <!-- 수수료 강조 -->
-    <div style="border:1px solid #F5A623;padding:10px 14px;background:#FFF8E8;margin-bottom:16px;font-size:12px">
-      <strong>제3조 (용역보수)</strong>&nbsp;&nbsp;
-      실제 환급세액의 <strong style="color:#B8770A">20%</strong>
-      <span style="color:#999;font-size:11px;margin-left:8px">(환급 없을 시 수수료 없음)</span>
-    </div>
-    <div id="cpb-fee-lang" style="border:1px solid #e0d0a0;padding:8px 14px;background:#FFFDF0;margin-bottom:16px;font-size:11px;color:#555"></div>
+
 
     <!-- 날짜 & 서명란 -->
-    <div id="cpb-date" style="text-align:center;font-size:13px;font-weight:600;margin-bottom:16px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px">
-      <div style="font-size:12px;color:#555">을: 세무회계 아진 · 대표세무사 김종빈 (인)</div>
-      <div style="text-align:center">
-        <div style="font-size:11px;color:#666;margin-bottom:4px">갑 (서명 또는 인)</div>
-        <div style="position:relative;width:100px;height:60px;border:1px solid #999;display:flex;align-items:center;justify-content:center">
-          <span style="font-size:10px;color:#bbb;position:absolute">(서명란)</span>
-          <div id="cpb-sig" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1"></div>
-        </div>
-        <div id="cpb-signame" style="font-size:11px;color:#444;margin-top:2px;border-top:1px solid #ccc;padding-top:1px;min-width:100px;text-align:center"></div>
+    <div id="cpb-date" style="text-align:center;font-size:13px;font-weight:600;margin-bottom:24px"></div>
+    <!-- 갑 서명 -->
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:24px">
+      <div style="font-size:13px;font-weight:600">갑 :</div>
+      <div id="cpb-signame" style="font-size:13px;font-weight:700;min-width:60px;text-align:center"></div>
+      <div style="position:relative;width:110px;height:60px;border:1px solid #999;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:10px;color:#bbb;position:absolute">(서명 또는 인)</span>
+        <div id="cpb-sig" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1"></div>
+      </div>
+    </div>
+    <!-- 을 서명 -->
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:600">을 :</div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-size:12px;font-weight:700">세무회계 아진</div>
+        <div style="font-size:11px;color:#555">대표세무사 김종빈 (인)</div>
       </div>
     </div>
 
@@ -1211,19 +1211,21 @@ async function doSubmit(){
     cpb('cpb-country').textContent = S.country;
     cpb('cpb-date').textContent    = `${today.getFullYear()}년   ${today.getMonth()+1}월   ${today.getDate()}일`;
     cpb('cpb-subtitle').textContent = c.title || 'SERVICE AGREEMENT';
-    // 조항 (한국어)
+    // 조항 (한국어) - 순서대로 1,2,3,4,5조
     cpb('cpb-articles').innerHTML = `
       <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제1조 (계약의 목적)</strong><br>
       갑은 2020년부터 2024년까지 기 신고된 종합소득세 경정청구에 관한 용역을 을에게 위임합니다.</div>
       <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제2조 (용역의 범위)</strong><br>
       을은 갑의 2020~2024년 종합소득세에 관하여 소득공제 및 세액공제를 경정청구하여 납부한 세금을 환급받는 용역을 제공합니다.</div>
+      <div style="margin-bottom:10px;border-left:3px solid #F5A623;padding:8px 10px;background:#FFF8E8;border-radius:0 6px 6px 0">
+        <strong style="color:#0B1F3A">제3조 (용역보수)</strong><br>
+        을의 용역에 대한 보수는 <strong style="color:#B8770A">실제 환급세액의 20%</strong>로 합니다. 환급이 발생하지 않을 경우 보수는 청구되지 않습니다. 보수는 환급금 입금일로부터 7일 이내에 지급합니다.
+      </div>
       <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제4조 (계약의 종료)</strong><br>
       본 계약은 제2조의 용역이 완료되는 날까지 유효합니다. 당사자 합의 또는 의무 위반 시 서면 통보 후 해지할 수 있습니다.</div>
-      <div><strong style="color:#0B1F3A">제5조 (비밀유지)</strong><br>
+      <div style="margin-bottom:10px"><strong style="color:#0B1F3A">제5조 (비밀유지)</strong><br>
       을은 갑으로부터 제공받은 모든 정보를 용역 수행 목적 이외에 사용하거나 제3자에게 공개하지 않습니다. 본 의무는 계약 종료 후 1년간 유지됩니다.</div>
     `;
-    // 수수료 번역
-    cpb('cpb-fee-lang').innerHTML = `<strong>${c.c3t}</strong>&nbsp;&nbsp;${c.c3.replace(/<[^>]+>/g,'')}`;
     // 번역 섹션
     cpb('cpb-lang-section').innerHTML = `
       <div style="font-weight:700;text-align:center;font-size:12px;color:#0B1F3A;margin-bottom:8px">${c.title}</div>
