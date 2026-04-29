@@ -1126,32 +1126,37 @@ async function doSubmit(){
     // ── 계약서 PDF (html2canvas) ──
     const contractBox = document.getElementById('contractKr');
     const contractOrigDisplay = contractBox.style.display;
-    contractBox.style.display = 'block'; // 캡처용 강제 노출
     const contractOrigWidth = contractBox.style.width;
-    contractBox.style.width = '794px'; // A4 비율 고정
+    const contractOrigMaxHeight = contractBox.style.maxHeight;
+    contractBox.style.display = 'block';
+    contractBox.style.width = '794px';
+    contractBox.style.maxHeight = 'none'; // 스크롤 제거해서 전체 캡처
+    await new Promise(r => setTimeout(r, 100)); // 렌더 대기
     const contractCanvas = await html2canvas(contractBox, {
       scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', logging:false,
       width:794,
       onclone:(doc)=>{
         const el=doc.getElementById('contractKr');
-        if(el){ el.style.width='794px'; el.style.fontFamily='Arial,sans-serif'; el.style.padding='32px'; }
+        if(el){ el.style.width='794px'; el.style.maxHeight='none'; el.style.fontFamily='Arial,sans-serif'; el.style.padding='32px'; }
       }
     });
+    contractBox.style.display = contractOrigDisplay;
     contractBox.style.width = contractOrigWidth;
-    contractBox.style.display = contractOrigDisplay; // 캡처 후 원복
+    contractBox.style.maxHeight = contractOrigMaxHeight;
 
     const contractPdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
     const CW=210, CM=12;
-    // 헤더
     contractPdf.setFillColor(11,31,58); contractPdf.rect(0,0,CW,20,'F');
     contractPdf.setTextColor(245,166,35); contractPdf.setFont('helvetica','bold'); contractPdf.setFontSize(13);
     contractPdf.text('경정청구 용역계약서', CW/2, 10, {align:'center'});
     contractPdf.setTextColor(255,255,255); contractPdf.setFontSize(8);
     contractPdf.text(`세무회계 아진  |  ${rawName}  |  ${v('arcnum')}`, CW/2, 17, {align:'center'});
-    // A4에 꽉 채우기
     const cW2 = CW-CM*2;
-    const cH2 = Math.min(cW2*(contractCanvas.height/contractCanvas.width), 277-20-CM);
-    contractPdf.addImage(contractCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', CM, 22, cW2, cH2);
+    const cRatio = contractCanvas.height / contractCanvas.width;
+    const cH2 = Math.min(cW2 * cRatio, 277-20-CM);
+    if(cW2 > 0 && cH2 > 0){
+      contractPdf.addImage(contractCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', CM, 22, cW2, cH2);
+    }
     const cBlob = contractPdf.output('blob');
     formData.append('attachment3', new File([cBlob], `${dateCode}_${arcNum}_CONTRACT.pdf`, {type:'application/pdf'}));
 
