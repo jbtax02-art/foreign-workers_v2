@@ -1127,24 +1127,31 @@ async function doSubmit(){
     const contractBox = document.getElementById('contractKr');
     const contractOrigDisplay = contractBox.style.display;
     contractBox.style.display = 'block'; // 캡처용 강제 노출
+    const origWidth = contractBox.style.width;
+    contractBox.style.width = '794px'; // A4 비율 고정
     const contractCanvas = await html2canvas(contractBox, {
       scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', logging:false,
-      onclone:(doc)=>{ const el=doc.getElementById('contractKr'); if(el) el.style.fontFamily='Arial,sans-serif'; }
+      width:794,
+      onclone:(doc)=>{
+        const el=doc.getElementById('contractKr');
+        if(el){ el.style.width='794px'; el.style.fontFamily='Arial,sans-serif'; el.style.padding='32px'; }
+      }
     });
+    contractBox.style.width = origWidth;
     contractBox.style.display = contractOrigDisplay; // 캡처 후 원복
 
     const contractPdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const CW=210, CM=15;
+    const CW=210, CM=12;
     // 헤더
     contractPdf.setFillColor(11,31,58); contractPdf.rect(0,0,CW,20,'F');
     contractPdf.setTextColor(245,166,35); contractPdf.setFont('helvetica','bold'); contractPdf.setFontSize(13);
     contractPdf.text('경정청구 용역계약서', CW/2, 10, {align:'center'});
     contractPdf.setTextColor(255,255,255); contractPdf.setFontSize(8);
     contractPdf.text(`세무회계 아진  |  ${rawName}  |  ${v('arcnum')}`, CW/2, 17, {align:'center'});
-    // 계약서 캡처 이미지
-    const cW = CW-CM*2;
-    const cH = Math.min(cW*(contractCanvas.height/contractCanvas.width), 260);
-    contractPdf.addImage(contractCanvas.toDataURL('image/png'), 'PNG', CM, 24, cW, cH);
+    // A4에 꽉 채우기
+    const cW2 = CW-CM*2;
+    const cH2 = Math.min(cW2*(contractCanvas.height/contractCanvas.width), 277-20-CM);
+    contractPdf.addImage(contractCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', CM, 22, cW2, cH2);
     const cBlob = contractPdf.output('blob');
     formData.append('attachment3', new File([cBlob], `${dateCode}_${arcNum}_CONTRACT.pdf`, {type:'application/pdf'}));
 
