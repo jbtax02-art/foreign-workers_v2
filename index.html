@@ -1074,7 +1074,7 @@ function cropSig(){
 // ── 안전한 이미지 삽입 헬퍼 ──
 function safeAddImage(pdf, dataUrl, fmt, x, y, w, h){
   try{
-    if(!dataUrl || !w || !h || w<=0 || h<=0 || isNaN(w) || isNaN(h)) return;
+    if(!dataUrl || !w || !h || w<=0 || h<=0 || isNaN(w) || isNaN(h) || !isFinite(w) || !isFinite(h)) return;
     // dataUrl 최소 길이 체크
     if(dataUrl.length < 100) return;
     safeAddImage(pdf, dataUrl, fmt, x, y, w, h);
@@ -1202,24 +1202,15 @@ async function doSubmit(){
     const W=210, H=297, M=12;
 
     const poaEl = document.getElementById('poaBox');
-    // 캡처 전 poaBox 너비를 A4 비율로 고정
-    const poaOrigWidth = poaEl.style.width;
-    poaEl.style.width = '794px';
-
-    await new Promise(r=>setTimeout(r,150));
+    // 오프스크린 캡처 (infoBox 방식)
+    const poaOrigStyle = poaEl.getAttribute('style') || '';
+    poaEl.style.cssText = 'display:block !important; position:fixed; left:-9999px; top:0; width:794px; background:#ffffff;';
+    await new Promise(r=>setTimeout(r,200));
     const poaCanvas = await html2canvas(poaEl, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-      width: 794,
-      onclone:(doc)=>{
-        const el=doc.getElementById('poaBox');
-        if(el){ el.style.width='794px'; el.style.fontFamily='Arial,sans-serif'; }
-      }
+      scale: 2, useCORS: true, allowTaint: true,
+      backgroundColor: '#ffffff', logging: false, width: 794
     });
-    poaEl.style.width = poaOrigWidth;
+    poaEl.setAttribute('style', poaOrigStyle);
 
     const poaImg = poaCanvas.toDataURL('image/jpeg', 0.95);
     const poaW   = W - M*2;
