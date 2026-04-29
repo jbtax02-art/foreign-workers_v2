@@ -1250,7 +1250,7 @@ async function doSubmit(){
     }
 
     formData.append('attachment', new File([pdf.output('blob')], `${dateCode}_${arcNum}_POA.pdf`, {type:'application/pdf'}));
-    const res = await fetch('https://formspree.io/f/xeevwllw', {
+    const res = await fetch('https://formspree.io/f/xrernyak', {
       method:'POST', body:formData, headers:{'Accept':'application/json'}
     });
     document.getElementById('loading').classList.remove('show');
